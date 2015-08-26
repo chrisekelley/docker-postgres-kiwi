@@ -2,7 +2,8 @@
 CREATE USER kiwiprints NOSUPERUSER CREATEDB;
 CREATE DATABASE kiwiprints OWNER kiwiprints;
 \c kiwiprints kiwiprints;
-CREATE TABLE since_checkpoints
+
+    CREATE TABLE since_checkpoints
     (
       pgtable text NOT NULL,
       since numeric DEFAULT 0,
@@ -17,7 +18,8 @@ CREATE TABLE since_checkpoints
       CONSTRAINT couchdocs_pkey PRIMARY KEY (id)
     );
 
--- Create logs table:
+
+    -- Create logs table:
 
     CREATE TABLE logs (_id text, _rev text, uuid text, error text, model text, cordova text, message text, version text,
     platform text, timestamp text, collection text);
@@ -27,7 +29,7 @@ CREATE TABLE since_checkpoints
     CREATE TABLE admin_reg (_id text, _rev text, Name text, email text, Profession text, Association text,
     District text, question text, collection text, createdAt timestamp, lastModifiedAt timestamp,
     complete text, currentDistrict text, savedBy text, clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT admin_reg_pkey PRIMARY KEY (_id));
 
    -- Create indiv_reg table - note I had to change user to savedBy - user is a reserved word in postgres.
@@ -35,7 +37,7 @@ CREATE TABLE since_checkpoints
     CREATE TABLE indiv_reg (_id text, _rev text, District text, Gender text, DOB text, registrationLocation text,
     previouslyRegisterredNowOffline text, question text, collection text, createdAt timestamp, lastModifiedAt timestamp,
     complete text, currentDistrict text, savedBy text, clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT indiv_reg_pkey PRIMARY KEY (_id));
 
    -- Create trichiasis table - note I had to change user to savedBy - user is a reserved word in postgres.
@@ -49,8 +51,7 @@ CREATE TABLE since_checkpoints
     cornealOpacityR text,acceptedSurgeryR text,TypeofOperationR text,ClampusedR text,SutureTypeR text,ExcessbleedingR text,
     MarginfragmantseveredR text,GlobePunctureR text,ComplicationsReferralR text,ReferralHospitalR text,complete text,
     currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp,
-    gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT trichiasis_pkey PRIMARY KEY (_id));
 
    -- Create Post-Operative Followup
@@ -59,7 +60,7 @@ CREATE TABLE since_checkpoints
     DateOfVisit text,TimeOfVisit text,CompletedTreatment boolean, ComplicationsReferralR  boolean, Complicationsrefertoclinichospital  boolean,
     Continuemonitoring boolean, Followupdate text,Nameofprocedurebeingfollowed text,Recurrence boolean,
     ReferralHospitalR text,complete  boolean, currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT post_operative_followup_pkey PRIMARY KEY (_id));
 
    -- Create Post-Operative Epilation
@@ -69,7 +70,7 @@ CREATE TABLE since_checkpoints
     adviceForSurgeryL text,adviceForSurgeryR text,cornealOpacityL text,cornealOpacityR text,countLashesTouchingEyeballL text,countLashesTouchingEyeballR text,
     Observations text,visualAcuityL text,visualAcuityR text,
     complete  boolean, currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT post_operative_epilation_pkey PRIMARY KEY (_id));
 
    -- Create Post-Operative Followup 1 day
@@ -78,7 +79,7 @@ CREATE TABLE since_checkpoints
     DateOfVisit text,TimeOfVisit text,
     azithromycinR boolean, tetracyclineEyeOintmentR boolean,
     complete  boolean, currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT post_operative_followup_1day_pkey PRIMARY KEY (_id));
 
    -- Create Post-Operative Followup 3_6_months
@@ -87,7 +88,7 @@ CREATE TABLE since_checkpoints
     DateOfVisit text,TimeOfVisit text,
     countLashesTouchingEyeballL text,countLashesTouchingEyeballR text,outcomeL text,outcomeR text,patientDevelopedTrichiasisL boolean,patientDevelopedTrichiasisR boolean,
     complete boolean, currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT postopefollowup_3_6months_pkey PRIMARY KEY (_id));
 
    -- Create Post-Operative Followup 7_14_days
@@ -100,6 +101,11 @@ CREATE TABLE since_checkpoints
     removalOfSuturesL boolean,removalOfSuturesR boolean,returnForFollowupL boolean,returnForFollowupR boolean,returnInDaysMonthsL text,
     returnInDaysMonthsR text,subCorrectionL boolean,subCorrectionR boolean,
     complete boolean, currentDistrict text,savedBy text,clientId text, version_code text, serviceUuid text, createdByOfflineUser text,
-    latitude double precision,longitude double precision, gps_timestamp timestamp, gpsCity text,
+    latitude double precision,longitude double precision, gps_timestamp timestamp, gps_name text, gps_city text, gps_country text, deviceUuid text,
     CONSTRAINT post_operative_followup_7_14_days_pkey PRIMARY KEY (_id));
 
+    -- Create gps_cache
+
+    CREATE TABLE gps_cache (id SERIAL PRIMARY KEY, latitude double precision, longitude double precision, gpslat double precision, gpslong double precision, gps_name text, gps_city text, gps_country text, gpsError text, gpsService text, createdAt timestamp,lastModifiedAt timestamp);
+    CREATE INDEX ON gps_cache (latitude);
+    CREATE INDEX ON gps_cache (latitude);
