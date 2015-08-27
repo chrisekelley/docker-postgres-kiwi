@@ -20,7 +20,7 @@ In another terminal run
 
 boot2docker ssh
 
-docker run -t -i -e DB_NAME=kiwiprints -e DB_USER=kiwiprints -e DB_PASS=kiwiprints -d -p 5432:5432 chrisekelley/postgres-kiwi
+docker run --name postgres-kiwi -t -i -e DB_NAME=kiwiprints -e DB_USER=kiwiprints -e DB_PASS=kiwiprints -d -p 5432:5432 chrisekelley/postgres-kiwi
 
 This will run the container in the background and return its id.
 
